@@ -8,6 +8,8 @@ const app = express();
 const fs = require('fs');
 
 const noteData = require("./db/noteData");
+const { json } = require("body-parser");
+const { userInfo } = require("os");
 
 
 
@@ -43,19 +45,48 @@ app.get("*", (req, res) => {
 
 
 app.get("/api/notes", (req,res) => {
-  res.json(noteData);
+//   res.json(noteData);
+  fs.readFile("./db/noteData", (err,data) => {
+    if (err) throw err;
+    noteData =JSON.parse(data);
+    res.send(noteData);
+ });
 
-  // console.log('get request');
+ 
+  console.log(noteData);
+  
 });
+
+
+ 
+
+
+
+
 
 app.post("/api/notes", (req,res) => {
-    noteData.push(req,body);
-    res.json(true);
+    const userNotes = req.body;
+    fs.readFile("./db/noteData", (err, data) => {
+        if (err) throw err;
+        noteData= JSON.parse(data);
+        noteData.push(userNotes);
+    
+   });
+        fs.writeFile("./db/noteData", stringData, (err, data) => {
+          if (err) throw err;
+
+        });
+
+    });
 
 
-});
+   
+    // noteData.push(req.body);
+    // res.json(true);
 
-//
+ 
+
+
 
 
 
