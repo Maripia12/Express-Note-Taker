@@ -19,4 +19,4 @@
  # Screenshot:
 
  
- ![screenshot](Assets\Notetaker.png)
+ ![screenshot](Assets/Notetaker.png)
