@@ -2,12 +2,13 @@
 
 const path = require("path");
 const express = require("express");
+const { v4: uuidv4 } = require("uuid");
 const app = express();
 
 
 const fs = require('fs');
 
-const noteData = require("./db/noteData");
+
 const { json } = require("express");
  
 
@@ -26,8 +27,51 @@ app.use(express.static("public"));
 
 
 
-//Router to html files
-//HTML GET requests
+
+
+// Api Router
+//GET/POST REQUEST   
+
+
+
+app.get("/api/notes", (req, res) => {
+  fs.readFile("./db/noteData.json", 'utf8', (err, data) => {
+
+    if (err) {
+      console.log(err);
+      return;
+    } else {
+      res.send(data);
+    }
+
+  });
+
+
+});
+
+
+
+  //API POST 
+ 
+ 
+ app.post("/api/notes", (req,res) => {
+    req.body.id = uuidv4();
+     const notes = JSON.parse(fs.readFileSync("./db/noteData.json"));
+     const userNotes = req.body;
+     notes.push(userNotes);
+ 
+     fs.writeFile("./db/noteData.json" , JSON.stringify(notes) , (err) => {
+      if(err) throw err;
+        res.end();
+     })
+
+  
+});
+     
+ 
+     
+   
+
 
 
 
@@ -40,84 +84,58 @@ app.get("*", (req, res) => {
 });
 
 
-// Api Router
-//GET/POST REQUEST   
 
 
 
-app.get("/api/notes", (req,res) => {
-  res.json(noteData);
-
-  fs.readFile("./db/noteData", (err,data) => {
-    if (err) throw err;
-    noteData =json(data);
-    res.send(noteData);
- });
-
- 
-  console.log(noteData);
-  
-});
 
 
- 
 
 
-//API POST REQUEST
 
-
-app.post("/api/notes", (req,res) => {
-    const userNotes = req.body;
-    fs.writeFile("./db/noteData" , (err, data) => {
-        if (err) throw err;
-        noteData= json(data);
-        noteData.push(userNotes);
-    
-   });
-        
-
-    });
 
   
-   
-    // noteData.push(req.body);
-    // res.json(true);
-
- 
-
-
-
-
-
-
-
-
-
-
-    
-    
-   
-    
-    
-
-
-
-
-
-
-
-
-
-
-
-
-
-
- 
-
-
 app.listen(PORT, () => {
 console.log(`App listening on PORT: ${PORT}`);
 });
+
+  
+        
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+    
+   
+    
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+
+
 
 
